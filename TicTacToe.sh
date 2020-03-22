@@ -9,6 +9,9 @@ declare -A matrix
 userChar="x"
 compChar="0"
 
+USER=0
+COMP=1
+
 function resetBoard() {
 	echo -e "\nNew game starts"
 	filledCells=0
@@ -24,3 +27,11 @@ function resetBoard() {
 resetBoard
 
 echo "You are assigned '$userChar'"
+
+toss=$((RANDOM % 2))
+case $toss in
+	$USER)
+		echo "Your turn first";;
+	$COMP)
+		echo "Computer's turn first";;
+esac
