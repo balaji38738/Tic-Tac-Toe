@@ -6,9 +6,11 @@
 
 echo "-------Tic Tac Toe-------"
 declare -A matrix
+userChar="x"
+compChar="0"
 
 function resetBoard() {
-	echo "New game starts"
+	echo -e "\nNew game starts"
 	filledCells=0
 	for (( i=0; i<3; i++ ))
 	do
@@ -20,3 +22,5 @@ function resetBoard() {
 }
 
 resetBoard
+
+echo "You are assigned '$userChar'"
