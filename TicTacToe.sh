@@ -24,6 +24,24 @@ function resetBoard() {
 	done
 }
 
+function displayBoard() {
+	for (( i=0; i<3; i++ ))
+	do
+   	for (( j=0; j<3; j++ ))
+   	do
+			printf "${matrix[$i,$j]} "
+			if [ $j -ne 2 ]
+			then
+      		printf "|"
+   		fi
+		done
+		if [ $i -ne 2 ]
+		then
+			printf "\n--------\n"
+		fi
+	done
+}
+
 resetBoard
 
 echo "You are assigned '$userChar'"
@@ -35,3 +53,5 @@ case $toss in
 	$COMP)
 		echo "Computer's turn first";;
 esac
+
+displayBoard
