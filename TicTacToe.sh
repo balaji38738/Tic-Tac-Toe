@@ -11,7 +11,8 @@ compChar="0"
 
 USER=0
 COMP=1
-
+TRUE=1
+FALSE=0
 function resetBoard() {
 	echo -e "\nNew game starts"
 	filledCells=0
@@ -27,13 +28,13 @@ function resetBoard() {
 function displayBoard() {
 	for (( i=0; i<3; i++ ))
 	do
-   	for (( j=0; j<3; j++ ))
-   	do
+		for (( j=0; j<3; j++ ))
+		do
 			printf "${matrix[$i,$j]} "
 			if [ $j -ne 2 ]
 			then
-      		printf "|"
-   		fi
+				printf "|"
+			fi
 		done
 		if [ $i -ne 2 ]
 		then
@@ -103,3 +104,4 @@ case $toss in
 esac
 
 displayBoard
+checkIfGameWon
