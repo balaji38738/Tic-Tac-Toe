@@ -105,3 +105,5 @@ esac
 
 displayBoard
 checkIfGameWon
+
+echo -e "\nThis is smart computer"
