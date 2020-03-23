@@ -93,35 +93,66 @@ function checkIfGameWon() {
    fi
 }
 
-#Checks if any two cell values are equal
-function anyTwoEqual() {
+#Checks if any two cell values are equal to computer character
+
+function any2CompChars() {
 	cell1=$1
 	cell2=$2
 	cell3=$3
-	if [[ "$cell1" = "0" && "$cell2" = "0" ]]
+
+	if [[ "$cell1" = "$compChar" && "$cell2" = "$compChar" ]]
 	then
 		canCompWin=$TRUE
-	elif [[ "$cell2" = "0" && "$cell3" = "0" ]]
+	elif [[ "$cell2" = "$compChar" && "$cell3" = "$compChar" ]]
 	then
 		canCompWin=$TRUE
-	elif [[ "$cell1" = "0" && "$cell3" = "0" ]]
+	elif [[ "$cell1" = "$compChar" && "$cell3" = "$compChar" ]]
 	then
 		canCompWin=$TRUE
 	fi
 }
 
-#Checks for winnnig computer winning possibilities
+#Checks for computer winning possibility
 function checkingCompWinning() {
 	canCompWin=$FALSE
 	for (( i=0; i<3; i++ ))
 	do
-		anyTwoEqual ${matrix[$i,0]} ${matrix[$i,1]} ${matrix[$i,2]}
-		anyTwoEqual ${matrix[0,$i]} ${matrix[1,$i]} ${matrix[2,$i]}
+		any2CompChars ${matrix[$i,0]} ${matrix[$i,1]} ${matrix[$i,2]}
+		any2CompChars ${matrix[0,$i]} ${matrix[1,$i]} ${matrix[2,$i]}
 	done
-	anyTwoEqual ${matrix[0,0]} ${matrix[1,1]} ${matrix[2,2]}
-	anyTwoEqual ${matrix[0,2]} ${matrix[1,1]} ${matrix[2,0]}
+	any2CompChars ${matrix[0,0]} ${matrix[1,1]} ${matrix[2,2]}
+	any2CompChars ${matrix[0,2]} ${matrix[1,1]} ${matrix[2,0]}
 }
 
+#Checks if any two cell values equal to user character
+function any2UserChars() {
+	cell1=$1
+	cell2=$2
+	cell3=$3
+
+	if [[ "$cell1" = "$userChar" && "$cell2" = "$userChar" ]]
+	then
+		canUserWin=$TRUE
+	elif [[ "$cell2" = "$userChar" && "$cell3" = "$userChar" ]]
+	then
+		canUserWin=$TRUE
+	elif [[ "$cell1" = "$userChar" && "$cell3" = "$userChar" ]]
+	then
+		canUserWin=$TRUE
+	fi
+}
+
+#Checks for user winning possibility
+function checkingUserWinning() {
+	canUserWin=$FALSE
+	for (( i=0; i<3; i++ ))
+	do
+		any2UserChars ${matrix[$i,0]} ${matrix[$i,1]} ${matrix[$i,2]}
+		any2UserChars ${matrix[0,$i]} ${matrix[1,$i]} ${matrix[2,$i]}
+	done
+	any2UserChars ${matrix[0,0]} ${matrix[1,1]} ${matrix[2,2]}
+	any2UserChars ${matrix[0,2]} ${matrix[1,1]} ${matrix[2,0]}
+}
 
 resetBoard
 
@@ -148,3 +179,13 @@ then
 else
 	echo "Computer can't win now"
 fi
+
+checkingUserWinning
+
+if [ $canUserWin -eq $TRUE ]
+then
+   echo "User can win now"
+else
+   echo "User can't win now"
+fi
+
