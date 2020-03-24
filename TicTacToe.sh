@@ -179,39 +179,33 @@ function playGame() {
 			turn=$COMP;;
 	esac
 	echo -e "\nThis is smart computer"
-
-	while [ 1==1 ]
-	do
-		displayBoard
-		checkIfGameWon
-		if [[ $isWon -eq $FALSE && $filledCells -ne 9 ]]
+	displayBoard
+	checkIfGameWon
+	if [[ $isWon -eq $FALSE && $filledCells -ne 9 ]]
+	then
+		if	[ $turn -eq $USER ]
 		then
-			if	[ $turn -eq $USER ]
-			then
-				while [ 1==1 ]
-				do
-					read -p "Enter row (0-2) and column(0-2): " row column
-					if [ "${matrix[$row,$column]}" == " " ]
-					then
-						matrix[$row,$column]=$userChar
-						((filledCells++))
-						break
-					fi
-				done
-			else
-				printf "Computer's turn\n"
-				checkingWinPossibility $compChar	#Checks if computer can win
-				if [[ "$putAtRow" != "" && "$putAtColumn" != "" ]]
+			while [ 1==1 ]
+			do
+				read -p "Enter row (0-2) and column(0-2): " row column
+				if [ "${matrix[$row,$column]}" == " " ]
 				then
-					matrix[$putAtRow,$putAtColumn]=$compChar
+					matrix[$row,$column]=$userChar
+					((filledCells++))
+					break
 				fi
-				((filledCells++))
-			fi
+			done
 		else
-			break
+			printf "Computer's turn\n"
+			checkingWinPossibility $compChar	#Checks if computer can win
+			if [[ "$putAtRow" != "" && "$putAtColumn" != "" ]]
+			then
+				matrix[$putAtRow,$putAtColumn]=$compChar
+			fi
+			((filledCells++))
+			turn=$((1-turn))
 		fi
-		turn=$((1-turn))
-	done
+	fi
 }
 
 resetBoard
