@@ -5,6 +5,7 @@
 #Date:- 22 March 2020
 
 echo "-------Tic Tac Toe-------"
+
 declare -A matrix
 userChar="x"
 compChar="0"
@@ -42,6 +43,7 @@ function displayBoard() {
 			printf "\n--------\n"
 		fi
 	done
+	printf "\n\n"
 }
 
 #Checks equality of three cell values
@@ -51,7 +53,7 @@ function areThreeEqual() {
    cell3=$3
    if [ "$cell1" != "" ]
    then
-      if [[ $cell1 = $cell2 && $cell2 = $cell3 ]]
+      if [[ "$cell1" = "$cell2" && "$cell2" = "$cell3" ]]
       then
          isWon=$TRUE
          if [ "$cell1" = "$userChar" ]
@@ -69,123 +71,148 @@ function checkIfGameWon() {
    isWon=$FALSE
    for (( i=0; i<3; i++ ))
    do
+		#Function call to check equality of rows
       areThreeEqual ${matrix[$i,0]} ${matrix[$i,1]} ${matrix[$i,2]}
+
+		#Function call to check equality of columns
       areThreeEqual ${matrix[0,$i]} ${matrix[1,$i]} ${matrix[2,$i]}
    done
+
+	#Function call to check equality of diagonals
    areThreeEqual ${matrix[0,0]} ${matrix[1,1]} ${matrix[2,2]}
    areThreeEqual ${matrix[0,2]} ${matrix[1,1]} ${matrix[2,0]}
+
    if [ $isWon -eq $TRUE ]
    then
-      if [ "$winner" = $userChar ]
+      if [ "$winner" = "$userChar" ]
       then
          echo "You Won"
-      elif [ "$winner" = $compChar ]
+      elif [ "$winner" = "$compChar" ]
       then
          echo "Computer Won"
-      fi
-   else
-      if [ $filledCells -eq 9 ]
-      then
-         echo "Game Tie"
-      else
-         turn=$((1-turn))
-      fi
-   fi
-}
-
-#Checks if any two cell values are equal to computer character
-
-function any2CompChars() {
-	cell1=$1
-	cell2=$2
-	cell3=$3
-
-	if [[ "$cell1" = "$compChar" && "$cell2" = "$compChar" ]]
+		fi
+	elif [ $filledCells -eq 9 ]
 	then
-		canCompWin=$TRUE
-	elif [[ "$cell2" = "$compChar" && "$cell3" = "$compChar" ]]
-	then
-		canCompWin=$TRUE
-	elif [[ "$cell1" = "$compChar" && "$cell3" = "$compChar" ]]
-	then
-		canCompWin=$TRUE
+		echo "Game Tie"
 	fi
 }
 
-#Checks for computer winning possibility
-function checkingCompWinning() {
-	canCompWin=$FALSE
+#Checks If someone can win
+function checkingWinPossibility() {
+	char=$1
+	putAtRow=""
+	putAtColumn=""
 	for (( i=0; i<3; i++ ))
 	do
-		any2CompChars ${matrix[$i,0]} ${matrix[$i,1]} ${matrix[$i,2]}
-		any2CompChars ${matrix[0,$i]} ${matrix[1,$i]} ${matrix[2,$i]}
+		if [[ "${matrix[$i,0]}" = "$char" && "${matrix[$i,1]}" = "$char" && "${matrix[$i,2]}" = " " ]]
+		then
+			putAtRow=$i
+			putAtColumn=2
+			break
+		elif [[ "${matrix[$i,0]}" = "$char" && "${matrix[$i,2]}" = "$char" && "${matrix[$i,1]}" = " " ]]
+		then
+			putAtRow=$i
+			putAtColumn=1
+			break
+		elif [[ "${matrix[$i,1]}" = "$char" && "${matrix[$i,2]}" = "$char" && "${matrix[$i,0]}" = " " ]]
+		then
+			putAtRow=$i
+			putAtColumn=0
+			break
+		elif [[ "${matrix[0,$i]}" = "$char" && "${matrix[1,$i]}" = "$char" && "${matrix[2,$i]}" = " " ]]
+		then
+			putAtRow=2
+			putAtColumn=$i
+			break
+		elif [[ "${matrix[0,$i]}" = "$char" && "${matrix[2,$i]}" = "$char" && "${matrix[1,$i]}" = " " ]]
+		then
+			putAtRow=1
+			putAtColumn=$i
+			break
+		elif [[ "${matrix[1,$i]}" = "$char" && "${matrix[2,$i]}" = "$char" && "${matrix[0,$i]}" = " " ]]
+		then
+			putAtRow=0
+			putAtColumn=$i
+			break
+		fi
 	done
-	any2CompChars ${matrix[0,0]} ${matrix[1,1]} ${matrix[2,2]}
-	any2CompChars ${matrix[0,2]} ${matrix[1,1]} ${matrix[2,0]}
-}
 
-#Checks if any two cell values equal to user character
-function any2UserChars() {
-	cell1=$1
-	cell2=$2
-	cell3=$3
-
-	if [[ "$cell1" = "$userChar" && "$cell2" = "$userChar" ]]
+	if [[ "$putAtRow" = ""  && "$putAtColumn" = "" ]]
 	then
-		canUserWin=$TRUE
-	elif [[ "$cell2" = "$userChar" && "$cell3" = "$userChar" ]]
-	then
-		canUserWin=$TRUE
-	elif [[ "$cell1" = "$userChar" && "$cell3" = "$userChar" ]]
-	then
-		canUserWin=$TRUE
+		if [[ "${matrix[0,0]}" = "$char" && "${matrix[1,1]}" = "$char" && "${matrix[2,2]}" = " " ]]
+		then
+			putAtRow=2
+			putAtColumn=2
+		elif [[ "${matrix[0,0]}" = "$char" && "${matrix[2,2]}" = "$char" && "${matrix[1,1]}" = " " ]]
+		then
+			putAtRow=1
+			putAtColumn=1
+		elif [[ "${matrix[1,1]}" = "$char" && "${matrix[2,2]}" = "$char" && "${matrix[0,0]}" = " " ]]
+		then
+			putAtRow=0
+			putAtColumn=0
+		elif [[ "${matrix[0,2]}" = "$char" && "${matrix[1,1]}" = "$char" && "${matrix[2,0]}" = " " ]]
+		then
+			putAtRow=2
+			putAtColumn=0
+		elif [[ "${matrix[0,2]}" = "$char" && "${matrix[2,0]}" = "$char" && "${matrix[1,1]}" = " " ]]
+		then
+			putAtRow=1
+			putAtColumn=1
+		elif [[ "${matrix[1,1]}" = "$char" && "${matrix[2,0]}" = "$char" && "${matrix[0,2]}" = " " ]]
+		then
+			putAtRow=0
+			putAtColumn=2
+		fi
 	fi
 }
 
-#Checks for user winning possibility
-function checkingUserWinning() {
-	canUserWin=$FALSE
-	for (( i=0; i<3; i++ ))
+function playGame() {
+	echo "You are assigned '$userChar'"
+	toss=$((RANDOM % 2))
+	case $toss in
+		$USER)
+			echo "Your turn first"
+			turn=$USER;;
+		$COMP)
+			echo "Computer's turn first"
+			turn=$COMP;;
+	esac
+	echo -e "\nThis is smart computer"
+
+	while [ 1==1 ]
 	do
-		any2UserChars ${matrix[$i,0]} ${matrix[$i,1]} ${matrix[$i,2]}
-		any2UserChars ${matrix[0,$i]} ${matrix[1,$i]} ${matrix[2,$i]}
+		displayBoard
+		checkIfGameWon
+		if [[ $isWon -eq $FALSE && $filledCells -ne 9 ]]
+		then
+			if	[ $turn -eq $USER ]
+			then
+				while [ 1==1 ]
+				do
+					read -p "Enter row (0-2) and column(0-2): " row column
+					if [ "${matrix[$row,$column]}" == " " ]
+					then
+						matrix[$row,$column]=$userChar
+						((filledCells++))
+						break
+					fi
+				done
+			else
+				printf "Computer's turn\n"
+				checkingWinPossibility $compChar	#Checks if computer can win
+				if [[ "$putAtRow" != "" && "$putAtColumn" != "" ]]
+				then
+					matrix[$putAtRow,$putAtColumn]=$compChar
+				fi
+				((filledCells++))
+			fi
+		else
+			break
+		fi
+		turn=$((1-turn))
 	done
-	any2UserChars ${matrix[0,0]} ${matrix[1,1]} ${matrix[2,2]}
-	any2UserChars ${matrix[0,2]} ${matrix[1,1]} ${matrix[2,0]}
 }
 
 resetBoard
-
-echo "You are assigned '$userChar'"
-
-toss=$((RANDOM % 2))
-case $toss in
-	$USER)
-		echo "Your turn first";;
-	$COMP)
-		echo "Computer's turn first";;
-esac
-
-displayBoard
-checkIfGameWon
-
-echo -e "\nThis is smart computer"
-
-checkingCompWinning
-
-if [ $canCompWin -eq $TRUE ]
-then
-   echo "Computer can win now"
-else
-	echo "Computer can't win now"
-fi
-
-checkingUserWinning
-
-if [ $canUserWin -eq $TRUE ]
-then
-   echo "User can win now"
-else
-   echo "User can't win now"
-fi
-
+playGame
