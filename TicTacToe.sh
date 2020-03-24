@@ -228,6 +228,13 @@ function playGame() {
 					matrix[$putAtRow,$putAtColumn]=$compChar
 				else
 					fillAtCorner
+					if [ $isEmptyCorner -eq $FALSE ]
+					then
+						if [ "${matrix[1,1]}" = " " ]
+						then
+							matrix[1,1]=$compChar
+						fi
+					fi
 				fi
 			fi
 			((filledCells++))
