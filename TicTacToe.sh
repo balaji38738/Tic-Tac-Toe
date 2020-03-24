@@ -201,6 +201,12 @@ function playGame() {
 			if [[ "$putAtRow" != "" && "$putAtColumn" != "" ]]
 			then
 				matrix[$putAtRow,$putAtColumn]=$compChar
+			else
+				checkingWinPossibility $userChar #Checks if user can win
+				if [[ "$putAtRow" != "" && "$putAtColumn" != "" ]]
+				then
+					matrix[$putAtRow,$putAtColumn]=$compChar
+				fi
 			fi
 			((filledCells++))
 			turn=$((1-turn))
@@ -210,3 +216,4 @@ function playGame() {
 
 resetBoard
 playGame
+
