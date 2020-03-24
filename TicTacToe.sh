@@ -219,52 +219,63 @@ function playGame() {
 			turn=$COMP;;
 	esac
 	echo -e "\nThis is smart computer"
-	displayBoard
-	checkIfGameWon
-	if [[ $isWon -eq $FALSE && $filledCells -ne 9 ]]
-	then
-		if	[ $turn -eq $USER ]
+
+	while [ 1==1 ]
+	do
+		displayBoard
+		checkIfGameWon
+		if [[ $isWon -eq $FALSE && $filledCells -ne 9 ]]
 		then
-			while [ 1==1 ]
-			do
-				read -p "Enter row (0-2) and column(0-2): " row column
-				if [ "${matrix[$row,$column]}" == " " ]
-				then
-					matrix[$row,$column]=$userChar
-					((filledCells++))
-					break
-				fi
-			done
-		else
-			printf "Computer's turn\n"
-			checkingWinPossibility $compChar	#Checks if computer can win
-			if [[ "$putAtRow" != "" && "$putAtColumn" != "" ]]
+			if	[ $turn -eq $USER ]
 			then
-				matrix[$putAtRow,$putAtColumn]=$compChar
+				while [ 1==1 ]
+				do
+					read -p "Enter row (0-2) and column(0-2): " row column
+					if [ "${matrix[$row,$column]}" == " " ]
+					then
+						matrix[$row,$column]=$userChar
+						((filledCells++))
+						break
+					fi
+				done
 			else
-				checkingWinPossibility $userChar #Checks if user can win
+				printf "Computer's turn\n"
+				checkingWinPossibility $compChar	#Checks if computer can win
 				if [[ "$putAtRow" != "" && "$putAtColumn" != "" ]]
 				then
 					matrix[$putAtRow,$putAtColumn]=$compChar
 				else
-					fillAtCorner
-					if [ $isEmptyCorner -eq $FALSE ]
+					checkingWinPossibility $userChar #Checks if user can win
+					if [[ "$putAtRow" != "" && "$putAtColumn" != "" ]]
 					then
-						if [ "${matrix[1,1]}" = " " ]
+						matrix[$putAtRow,$putAtColumn]=$compChar
+					else
+						fillAtCorner
+						if [ $isEmptyCorner -eq $FALSE ]
 						then
-							matrix[1,1]=$compChar
-						else
-							fillAtSide
+							if [ "${matrix[1,1]}" = " " ]
+							then
+								matrix[1,1]=$compChar
+							else
+								fillAtSide
+							fi
 						fi
 					fi
 				fi
+				((filledCells++))
 			fi
-			((filledCells++))
-			turn=$((1-turn))
+		else
+			break
 		fi
-	fi
+		turn=$((1-turn))
+	done
 }
 
-resetBoard
-playGame
+playAgain="y"
+while [ "$playAgain" = "y" ]
+do
+	resetBoard
+	playGame
+	read -p "Do you want to play again(y/n) ?: " playAgain
+done
 
