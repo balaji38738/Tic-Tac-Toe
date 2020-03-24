@@ -72,15 +72,15 @@ function checkIfGameWon() {
    for (( i=0; i<3; i++ ))
    do
 		#Function call to check equality of rows
-      areThreeEqual ${matrix[$i,0]} ${matrix[$i,1]} ${matrix[$i,2]}
+		areThreeEqual ${matrix[$i,0]} ${matrix[$i,1]} ${matrix[$i,2]}
 
 		#Function call to check equality of columns
-      areThreeEqual ${matrix[0,$i]} ${matrix[1,$i]} ${matrix[2,$i]}
-   done
+		areThreeEqual ${matrix[0,$i]} ${matrix[1,$i]} ${matrix[2,$i]}
+	done
 
 	#Function call to check equality of diagonals
-   areThreeEqual ${matrix[0,0]} ${matrix[1,1]} ${matrix[2,2]}
-   areThreeEqual ${matrix[0,2]} ${matrix[1,1]} ${matrix[2,0]}
+	areThreeEqual ${matrix[0,0]} ${matrix[1,1]} ${matrix[2,2]}
+	areThreeEqual ${matrix[0,2]} ${matrix[1,1]} ${matrix[2,0]}
 
 	if [ $isWon -eq $TRUE ]
 	then
@@ -167,6 +167,26 @@ function checkingWinPossibility() {
 	fi
 }
 
+#Fills vacant corner for computer
+function fillAtCorner() {
+	isEmptyCorner=$TRUE
+	if [ "${matrix[0,0]}" = " " ]
+	then
+		matrix[0,0]=$compChar
+	elif [ "${matrix[0,2]}" = " " ]
+	then
+		matrix[0,2]=$compChar
+	elif [ "${matrix[2,0]}" = " " ]
+	then
+		matrix[2,0]=$compChar
+	elif [ "${matrix[2,2]}" = " "  ]
+	then
+		matrix[2,2]=$compChar
+	else
+		isEmptyCorner=$FALSE
+	fi
+}
+
 function playGame() {
 	echo "You are assigned '$userChar'"
 	toss=$((RANDOM % 2))
@@ -206,6 +226,8 @@ function playGame() {
 				if [[ "$putAtRow" != "" && "$putAtColumn" != "" ]]
 				then
 					matrix[$putAtRow,$putAtColumn]=$compChar
+				else
+					fillAtCorner
 				fi
 			fi
 			((filledCells++))
