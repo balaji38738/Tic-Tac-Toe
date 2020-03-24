@@ -187,6 +187,26 @@ function fillAtCorner() {
 	fi
 }
 
+#Fills vacant side for computer
+function fillAtSide() {
+	isEmptySide=$TRUE
+	if [ "${matrix[0,1]}" = " " ]
+	then
+		matrix[0,1]=$compChar
+	elif [ "${matrix[1,0]}" = " " ]
+	then
+		matrix[1,0]=$compChar
+	elif [ "${matrix[1,2]}" = " " ]
+	then
+		matrix[1,2]=$compChar
+	elif [ "${matrix[2,1]}" = " "  ]
+	then
+		matrix[2,1]=$compChar
+	else
+		isEmptySide=$FALSE
+	fi
+}
+
 function playGame() {
 	echo "You are assigned '$userChar'"
 	toss=$((RANDOM % 2))
@@ -233,6 +253,8 @@ function playGame() {
 						if [ "${matrix[1,1]}" = " " ]
 						then
 							matrix[1,1]=$compChar
+						else
+							fillAtSide
 						fi
 					fi
 				fi
