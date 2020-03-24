@@ -82,14 +82,14 @@ function checkIfGameWon() {
    areThreeEqual ${matrix[0,0]} ${matrix[1,1]} ${matrix[2,2]}
    areThreeEqual ${matrix[0,2]} ${matrix[1,1]} ${matrix[2,0]}
 
-   if [ $isWon -eq $TRUE ]
-   then
-      if [ "$winner" = "$userChar" ]
-      then
-         echo "You Won"
-      elif [ "$winner" = "$compChar" ]
-      then
-         echo "Computer Won"
+	if [ $isWon -eq $TRUE ]
+	then
+		if [ "$winner" = "$userChar" ]
+		then
+			echo "You Won"
+		elif [ "$winner" = "$compChar" ]
+		then
+			echo "Computer Won"
 		fi
 	elif [ $filledCells -eq 9 ]
 	then
